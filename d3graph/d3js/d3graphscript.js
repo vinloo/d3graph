@@ -56,56 +56,58 @@ function d3graphscript(config = {
 
   // force.nodes(graph.nodes)
   //   .on("tick", tick);
-simulation.nodes(graph.nodes)
-    .on("tick", function() {
-      link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
+  simulation.nodes(graph.nodes)
+    .on("tick", function () {
+      link.attr("x1", function (d) { return d.source.x; })
+        .attr("y1", function (d) { return d.source.y; })
+        .attr("x2", function (d) { return d.target.x; })
+        .attr("y2", function (d) { return d.target.y; });
 
-      node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+      node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
     });
-    
 
-var link = svg.selectAll(".link")
+
+  var link = svg.selectAll(".link")
     .data(graph.links)
     .enter().append("line")
     .attr("class", "link")
-    .attr('marker-start', function(d){ return 'url(#marker_' + d.marker_start + ')' })
-    .attr("marker-end", function(d) {
-      if (config.directed) {return 'url(#marker_' + d.marker_end + ')' }})
-    .style("stroke-width", function(d) {return d.edge_width;})          // LINK-WIDTH
-    .style("stroke", function(d) {return d.color;});      
+    .attr('marker-start', function (d) { return 'url(#marker_' + d.marker_start + ')' })
+    .attr("marker-end", function (d) {
+      if (config.directed) { return 'url(#marker_' + d.marker_end + ')' }
+    })
+    .style("stroke-width", function (d) { return d.edge_width; })          // LINK-WIDTH
+    .style("stroke", function (d) { return d.color; });
 
   var linkText = svg.selectAll(".link-text")
     .data(graph.links)
     .enter().append("text")
     .attr("class", "link-text")
-    .attr("font-size", function(d) { return d.label_fontsize + "px"; })
-    .style("fill", function(d) { return d.label_color; })
+    .attr("font-size", function (d) { return d.label_fontsize + "px"; })
+    .style("fill", function (d) { return d.label_color; })
     .style("font-family", "Arial")
-    .text(function(d) { return d.label; });
+    .text(function (d) { return d.label; });
 
-var node = svg.selectAll(".node")
+  var node = svg.selectAll(".node")
     .data(graph.nodes)
     .enter().append("g")
     .attr("class", "node")
     .call(drag)
-    .on('dblclick', connectedNodes); // HIGHLIGHT ON/OFF
+    .on('dblclick', connectedNodes) // HIGHLIGHT ON/OFF
+    .on('click', nodeClick);
 
   node.append("circle")
-    .attr("r", function(d) { return d.node_size; })
-    .style("fill", function(d) { return d.node_color; })
+    .attr("r", function (d) { return d.node_size; })
+    .style("fill", function (d) { return d.node_color; })
     .style("opacity", 0.95)
-    .style("stroke-width", function(d) { return d.node_size_edge; })
-    .style("stroke", function(d) { return d.node_color_edge; });
+    .style("stroke-width", function (d) { return d.node_size_edge; })
+    .style("stroke", function (d) { return d.node_color_edge; });
 
   node.append("text")
     .attr("dx", 10)
     .attr("dy", ".35em")
-    .text(function(d) { return d.node_name; })
-    .style("font-size", function(d) { return d.node_fontsize + "px"; })
-    .style("fill", function(d) { return d.node_fontcolor; })
+    .text(function (d) { return d.node_name; })
+    .style("font-size", function (d) { return d.node_fontsize + "px"; })
+    .style("fill", function (d) { return d.node_fontcolor; })
     .style("font-family", "monospace");
 
   let showInHover = ["node_tooltip"];
@@ -127,16 +129,16 @@ var node = svg.selectAll(".node")
     .data(data_marker)
     .enter()
     .append('svg:marker')
-    .attr('id', function(d) { return 'marker_' + d.name })
+    .attr('id', function (d) { return 'marker_' + d.name })
     .attr('markerHeight', 10)
     .attr('markerWidth', 10)
     .attr("markerUnits", "userSpaceOnUse")
     .attr('orient', 'auto')
     .attr('refX', 15)
     .attr('refY', 0)
-    .attr('viewBox', function(d) { return d.viewbox })
+    .attr('viewBox', function (d) { return d.viewbox })
     .append('svg:path')
-    .attr('d', function(d) { return d.path })
+    .attr('d', function (d) { return d.path })
     .style("fill", '#808080')
     .style("stroke", '#808080')
     .style("opacity", 0.95)
@@ -145,14 +147,14 @@ var node = svg.selectAll(".node")
   restart();
 
   function tick() {
-    link.attr("x1", function(d) { return d.source.x; })
-      .attr("y1", function(d) { return d.source.y; })
-      .attr("x2", function(d) { return d.target.x; })
-      .attr("y2", function(d) { return d.target.y; });
+    link.attr("x1", function (d) { return d.source.x; })
+      .attr("y1", function (d) { return d.source.y; })
+      .attr("x2", function (d) { return d.target.x; })
+      .attr("y2", function (d) { return d.target.y; });
 
-    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-    linkText.attr("x", function(d) { return (d.source.x + d.target.x) / 2; })
-      .attr("y", function(d) { return (d.source.y + d.target.y) / 2; });
+    node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
+    linkText.attr("x", function (d) { return (d.source.x + d.target.x) / 2; })
+      .attr("y", function (d) { return (d.source.y + d.target.y) / 2; });
   }
 
   var toggle = 0;
@@ -160,7 +162,7 @@ var node = svg.selectAll(".node")
   for (i = 0; i < graph.nodes.length; i++) {
     linkedByIndex[i + "," + i] = 1;
   }
-  graph.links.forEach(function(d) {
+  graph.links.forEach(function (d) {
     linkedByIndex[d.source.index + "," + d.target.index] = 1;
   });
 
@@ -171,10 +173,10 @@ var node = svg.selectAll(".node")
   function connectedNodes() {
     if (toggle == 0) {
       d = d3.select(this).node().__data__;
-      node.style("opacity", function(o) {
+      node.style("opacity", function (o) {
         return neighboring(d, o) | neighboring(o, d) ? 1 : 0.1;
       });
-      link.style("opacity", function(o) {
+      link.style("opacity", function (o) {
         return d.index == o.source.index | d.index == o.target.index ? 1 : 0.1;
       });
       toggle = 1;
@@ -207,8 +209,8 @@ var node = svg.selectAll(".node")
     link = link.data(graph.links);
     link.exit().remove();
     link.enter().insert("line", ".node").attr("class", "link");
-    link.style("stroke-width", function(d) { return d.edge_width; })
-      .style("stroke", function(d) { return d.color; });
+    link.style("stroke-width", function (d) { return d.edge_width; })
+      .style("stroke", function (d) { return d.color; });
 
     node = node.data(graph.nodes);
     node.enter().append("circle").attr("class", "node").attr("r", 5).call(d3.drag()
