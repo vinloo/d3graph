@@ -76,7 +76,10 @@ function d3graphscript(config = {
       if (config.directed) { return 'url(#marker_' + d.marker_end + ')' }
     })
     .style("stroke-width", function (d) { return d.edge_width; })          // LINK-WIDTH
-    .style("stroke", function (d) { return d.color; });
+    .style("stroke", function (d) { return d.color; })
+    .attr("source", function (d) { return graph.nodes[d.source].node_name; })
+    .attr("target", function (d) { return graph.nodes[d.target].node_name; })
+    .on('click', linkClick);
 
   var linkText = svg.selectAll(".link-text")
     .data(graph.links)
